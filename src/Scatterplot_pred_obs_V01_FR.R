@@ -5,7 +5,7 @@
 
 ExperimentalVsPredicted <- function(path.prediction, real.data){
   #get the real data
-  realValue <- real.data[1:nrow(real.data), 2]
+  realValue <- as.numeric(real.data[1:nrow(real.data), 2]) #changed TBD
   # make plots
   ##################
   #### plot 1 : axis dimension is defined by min aand max value of all predictions
@@ -18,11 +18,12 @@ ExperimentalVsPredicted <- function(path.prediction, real.data){
   for(i in 1:length(path.prediction)) { 
     #select prediction file i
     pat <- paste('_',i,'.txt', sep='') 
+    print(i)
     CurrentSubmission <- submission.files[grepl(pat, submission.files)]
     prediction.table <- read.table(file=CurrentSubmission, sep="\t", header=TRUE)
-    predicted.value <- prediction.table[1:nrow(prediction.table), 2]
-    min.vector[i] <- min(as.numeric(predicted.value)) #changed TBD
-    max.vector[i] <- max(as.numeric(predicted.value)) #changed TBD
+    predicted.value <- as.numeric(prediction.table[1:nrow(prediction.table), 2]) #changed TBD
+    min.vector[i] <- min(predicted.value)
+    max.vector[i] <- max(predicted.value) 
   }
   min.max.predictions <- c(min(min.vector)*0.90, max(max.vector)*1.10) # vector for plot size
   
@@ -31,7 +32,7 @@ ExperimentalVsPredicted <- function(path.prediction, real.data){
     #select prediction file i
     pat <- paste('_',i,'.txt', sep='') 
     CurrentSubmission <- submission.files[grepl(pat, submission.files)]
-    prediction.table <- read.table(file=CurrentSubmission, sep="\t", header=TRUE)
+    prediction.table <- read.delim(file=CurrentSubmission, sep="\t", header=TRUE) #changed tbd
     predicted.value <- prediction.table[1:nrow(prediction.table), 2]
     par(srt = 45) # point lables orientation
     plot(min.max.predictions, min.max.predictions, main=  paste("Submission", i), type= 'n', col = "#0000FFFF", xlab="Experimental values", ylab="Predicted values", cex.axis=1.3, cex.lab=1.5, cex.main=1.5, cex = 2)
